@@ -101,7 +101,7 @@ If ($Null -eq ([System.Management.Automation.PSTypeName]'TrustAllCertsPolicy').T
 "@
 }
 [System.Net.ServicePointManager]::CertificatePolicy = New-Object TrustAllCertsPolicy
-#Enable TLS, TLS1.1, TLS1.2, TLS1.3 in this session if they are available
+$#Enable TLS, TLS1.1, TLS1.2, TLS1.3 in this session if they are available
 IF([Net.SecurityProtocolType]::Tls) {[Net.ServicePointManager]::SecurityProtocol=[Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls}
 IF([Net.SecurityProtocolType]::Tls11) {[Net.ServicePointManager]::SecurityProtocol=[Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls11}
 IF([Net.SecurityProtocolType]::Tls12) {[Net.ServicePointManager]::SecurityProtocol=[Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12}
@@ -1091,10 +1091,6 @@ Function Install-LTService{
 
         If (!$SkipDotNet){
             $DotNET = Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -recurse -EA 0 | Get-ItemProperty -name Version,Release -EA 0 | Where-Object { $_.PSChildName -match '^(?!S)\p{L}'} | Select-Object -ExpandProperty Version -EA 0
-            If (-not ($DotNet -like '3.5.*')){
-                Write-Output ".NET Framework 3.5 installation needed."
-                #Install-WindowsFeature Net-Framework-Core
-                $OSVersion = [System.Environment]::OSVersion.Version
 
                 If ([version]$OSVersion -gt [version]'6.2'){
                     Try{
